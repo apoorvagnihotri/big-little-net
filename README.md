@@ -7,9 +7,9 @@ This is an unofficial submission to ICLR 2019 Reproducibility Challenge. The cen
 
 ## Checklist
 
-- [ ] Getting the baseline from torchvision
+- [x] Getting the baseline from torchvision
+- [ ] Skeleton of the Project
 - [ ] Testing the baseline
-- [ ] Structure of the Project
 - [ ] Building Big-Little Module
   - [ ] 1st half of the components
   - [ ] 2nd half of the components
@@ -21,11 +21,11 @@ This is an unofficial submission to ICLR 2019 Reproducibility Challenge. The cen
 
 **5th March 2019** - Set-up repo, got ResNet baseline from [torchvision models](https://pytorch.org/docs/stable/torchvision/models.html). Figuring out details in Pytorch and covering some basics in it.
 
+**6th March 2019** - Pytorch Basics for CNNs | Understand ResNet code
+
 ## Plan
 
-**6th March 2019** - Think of project skeleton | Understand ResNet code
-
-**7th March 2019** - Testing baseline
+**7th March 2019** - Plan the skeleton of implementation
 
 **8th March 2019** - Building Big-Little
 
@@ -46,4 +46,18 @@ Using GPU is _highly_ recommended.
 Recreate the environment using the following command.
 ```sh
 conda create -e env.yml
+```
+
+## Scope
+
+Run the following command 
+
+## Reproduced Results
+
+
+## Training
+
+Training is controlled by various options, which can be passed through the command line. The defaults can be looked at, in the file [``utils/options.py``](https://github.com/k0pch4/big-little-net/blob/master/utils/options.py). Try running for the help menu:
+```sh
+python3 train.py --help
 ```
