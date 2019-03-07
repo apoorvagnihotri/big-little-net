@@ -5,8 +5,10 @@
 """
 
 import torch.nn as nn
+import inspect
 import resnet
 import utils
+import math
 
 class LayerDef:
     r"""Used to store the layer definitions and the attributes of the
@@ -26,13 +28,21 @@ class LayerDef:
         self.defn = defn
         self.kwargs = kwargs
 
-    def get_layer_obj(self, **ckwargs):
-        r"""Return a `Layer` with defination `defn` modified custom arguments"""
-        ckwargs = utils.modify_args(self.kwargs, ckwargs)
-        return self.defn(**ckwargs)
+    def get_Kbranch_layer(self, K, **addtional_kwargs):
+        r"""Return a `Layer` with defination `defn` modified custom arguments
+        corresponding to `K`th branch of Big-Little Net
 
-    def __call__(self, **ckwargs):
-        return self.get_layer_obj(**ckwargs)
+        * :attr:`K` `Branch` number.
+
+        * :attr:`addtional_kwargs` Additional Kwargs that would overwrite
+        the defaults given in Big-Little Net Architecture.
+        """
+        # getting the kwargs for `Layer` corresp. to `K`th branch
+        ckwargs = self._custom_kwargs(K)
+        ckwargs = utils.modify_args(self.kwargs, ckwargs)
+        # overwrite with user provided additional_kwargs
+        final_kwargs = utils.modify_args(ckwargs, addtional_kwargs)
+        return self.defn(**final_kwargs)
 
     def __repr__(self):
         r"""representation of stored stuff useful for debugging"""
@@ -41,8 +51,17 @@ class LayerDef:
         func_doc = inspect.getdoc(self.defn)
         return layer_doc + hr + func_doc
 
+    def __call__(self, K):
+        return self.get_Kbranch_layer(K)
+
+    def _custom_kwargs(self, K):
+        r"""Pass no custom kwarg, when no specialization"""
+        return {}
+
 
 # Modules below are for ease of use during implementation of Big-Little Net
+
+# @ todo, ConvDef can be made a parent of Conv classes, if required
 class Conv3x3Def(LayerDef):
     r"""Object for storing a 3x3 `nn.Conv2d` function defination.
     Uses the convolution definitions from `renset.py`
@@ -60,6 +79,12 @@ class Conv3x3Def(LayerDef):
                          out_planes = out_planes,
                          stride = stride)
 
+    def _custom_kwargs(self, K):
+        r"""Returns custom attributes for `Conv3x3` in `K`th `Branch`"""
+        ckwargs = {"in_planes": math.ceil(self.kwargs["in_planes"]/(2**K)),
+                   "out_planes": math.ceil(self.kwargs["out_planes"]/(2**K))}
+        return ckwargs
+
 class Conv1x1Def(LayerDef):
     r"""Object for storing a 1x1 `nn.Conv2d` function defination.
     Uses the convolution definitions from `renset.py`
@@ -76,6 +101,12 @@ class Conv1x1Def(LayerDef):
                          in_planes = in_planes,
                          out_planes = out_planes,
                          stride = stride)
+
+    def _custom_kwargs(self, K):
+        r"""Returns custom attributes for `Conv1x1` in `K`th `Branch`"""
+        ckwargs = {"in_planes": math.ceil(self.kwargs["in_planes"]/(2**K)),
+                   "out_planes": math.ceil(self.kwargs["out_planes"]/(2**K))}
+        return ckwargs
 
 class FC(LayerDef):
     pass
