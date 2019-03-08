@@ -6,7 +6,6 @@
 
 import torch.nn as nn
 import inspect
-import resnet
 import utils
 import math
 
@@ -14,12 +13,11 @@ class LayerDef:
     r"""Used to store the layer definitions and the attributes of the
     layer corresponding to the biggest branch.
 
-    **Note**: Always pass `Layer` definition as positional arg
+    **Note**: Always pass `Layer` definition `defn` as positional arg
     and the arguments to that `Layer` as keyword arguments
 
     * :attr:`defn` the function definition for the layer
     to be called when compiling.
-
     * :attr:`kwargs` are the relevant arguments to the function
     definition passed in `defn`. When the object is called,
     these arguments would be passed to the `defn`.
@@ -29,12 +27,11 @@ class LayerDef:
         self.kwargs = kwargs
 
     def get_Kbranch_layer(self, K, **addtional_kwargs):
-        r"""Return a `Layer` with defination `defn` modified custom arguments
+        r"""Return an initialized `Layer` with arguments
         corresponding to `K`th branch of Big-Little Net
 
         * :attr:`K` `Branch` number.
-
-        * :attr:`addtional_kwargs` Additional Kwargs that would overwrite
+        * :attr:`addtional_kwargs` Additional kwargs that would overwrite
         the defaults given in Big-Little Net Architecture.
         """
         # getting the kwargs for `Layer` corresp. to `K`th branch
@@ -55,61 +52,51 @@ class LayerDef:
         return self.get_Kbranch_layer(K)
 
     def _custom_kwargs(self, K):
-        r"""Pass no custom kwarg, when no specialization"""
+        r"""No specialization, ignore this case"""
         return {}
 
 
 # Modules below are for ease of use during implementation of Big-Little Net
 
-# @ todo, ConvDef can be made a parent of Conv classes, if required
-class Conv3x3Def(LayerDef):
-    r"""Object for storing a 3x3 `nn.Conv2d` function defination.
+class Conv2dDef(LayerDef):
+    r"""Object for storing a `nn.Conv2d` function defination.
     Uses the convolution definitions from `renset.py`
 
-
-    * :attr:`in_planes` number of input planes
-
-    * :attr:`out_planes` number of output planes
-
+    * :attr:`in_channels` number of input planes
+    * :attr:`out_channels` number of output planes
     * :attr:`stride` stride to be chosen for this convolution layer
     """
-    def __init__(self, in_planes, out_planes, stride=1):
-        super().__init__(resnet.conv3x3,
-                         in_planes = in_planes,
-                         out_planes = out_planes,
-                         stride = stride)
+    def __init__(self, in_channels, out_channels, kernel_size, stride=1):
+        super().__init__(nn.Conv2d,
+                         in_channels=in_channels,
+                         out_channels=out_channels,
+                         kernel_size=kernel_size,
+                         stride=1,
+                         padding=1,
+                         bias=False)
 
-    def _custom_kwargs(self, K):
-        r"""Returns custom attributes for `Conv3x3` in `K`th `Branch`"""
-        ckwargs = {"in_planes": math.ceil(self.kwargs["in_planes"]/(2**K)),
-                   "out_planes": math.ceil(self.kwargs["out_planes"]/(2**K))}
+    def _custom_kwargs(self, K, alpha):
+        r"""Returns custom attributes for `Conv` in `K`th `Branch`"""
+        if K: # Little Branch
+            ckwargs = {"in_channels": math.ceil(self.kwargs["in_channels"]/(alpha)),
+                       "out_channels": math.ceil(self.kwargs["out_channels"]/(alpha))}
+        else: # Big Branch
+            ckwargs = {}
         return ckwargs
 
-class Conv1x1Def(LayerDef):
-    r"""Object for storing a 1x1 `nn.Conv2d` function defination.
-    Uses the convolution definitions from `renset.py`
+# class FC(LayerDef): ### Need to get to the end of the Network
+#     def __init__(self, in_channels, out_channels, kernel_size, stride=1):
+#         super().__init__(nn.Linear,
+#                          in_channels=in_channels,
+#                          out_channels=out_channels,
+#                          kernel_size=kernel_size,
+#                          stride=1,
+#                          padding=1,
+#                          bias=False)
 
-
-    * :attr:`in_planes` number of input planes
-
-    * :attr:`out_planes` number of output planes
-
-    * :attr:`stride` stride to be chosen for this convolution layer
-    """
-    def __init__(self, in_planes, out_planes, stride=1):
-        super().__init__(resnet.conv1x1,
-                         in_planes = in_planes,
-                         out_planes = out_planes,
-                         stride = stride)
-
-    def _custom_kwargs(self, K):
-        r"""Returns custom attributes for `Conv1x1` in `K`th `Branch`"""
-        ckwargs = {"in_planes": math.ceil(self.kwargs["in_planes"]/(2**K)),
-                   "out_planes": math.ceil(self.kwargs["out_planes"]/(2**K))}
-        return ckwargs
-
-class FC(LayerDef):
-    pass
-
-class Transition(LayerDef):
-    pass
+#     def _custom_kwargs(self, K):
+#         r"""Returns custom attributes for `Conv` in `K`th `Branch`"""
+#         ckwargs = {"in_channels": math.ceil(self.kwargs["in_channels"]/(alpha)),
+#                    "out_channels": math.ceil(self.kwargs["out_channels"]/(alpha))}
+#         return ckwargs
+#     pass
