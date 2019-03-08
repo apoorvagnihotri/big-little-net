@@ -2,17 +2,19 @@
 
 ## Introduction
 
-This is an unofficial submission to ICLR 2019 Reproducibility Challenge. The central theme of the work by the authors is to reduce the computations while improving the accuracy in the case of Object Recognintion and Speech Recognition by using multiple branches with different scales in the CNN architecure. This helps in feature detection at different scales. The authors claim that in the case of Object Recognition they are able to improve the accuracy by 1% while reducing the computations by 1/3rd of the original.
+This is an unofficial submission to ICLR 2019 Reproducibility Challenge. The central theme of the work by the authors is to reduce the computations while improving the accuracy in the case of Object Recognition and Speech Recognition by using multiple branches with different scales in the CNN architecture. This helps in feature detection at different scales. The authors claim that in the case of Object Recognition they can improve the accuracy by 1% while reducing the computations by 1/3rd of the original.
+
+I am trying to build an application that would be able to take in a Resnet-Like Architecture and automatically come up with the Big-Little variant of it. This has been made difficult as in the case of `K > 2` (`K` denotes the number of branches in Big-Little Net) does not follow a specific formula for the number of Residual Blocks and Convolutional Layers for each of the branches. My appication would only work for the case of `K = 2`.
 
 
 ## Checklist
 
 - [x] Getting the baseline from torchvision
-- [ ] Skeleton of the Project
-- [ ] Testing the baseline
+- [x] Skeleton of the Project
 - [ ] Building Big-Little Module
-  - [ ] 1st half of the components
+  - [x] 1st half of the components (without branches | `Block` and `LayerDef`)
   - [ ] 2nd half of the components
+- [ ] Testing the baseline
 - [ ] Injecting Resnet into Big-Little Net
 - [ ] Run the models on GPUs
 - [ ] Testing the reproducibility
@@ -23,11 +25,14 @@ This is an unofficial submission to ICLR 2019 Reproducibility Challenge. The cen
 
 **6th March 2019** - Pytorch Basics for CNNs | Understand ResNet code
 
+**7th March 2019** - Plan the skeleton of implementation | Coded `Block` and `LayerDef` for BLNet which will help any architecture to be ported to Big-Little Net if is similar to ResNet. | Understand Inception Code to work out ways to implement `Branch`es in Big-Little Net.
+
+**8th March 2019** - Setback: The original paper doesn't always follow specific guidelines for `K > 2`. Therefore my approach to automating for `K > 2` would not work. Currently only trying to make the automation work for `K=1` and `K=2`.
+
+
 ## Plan
 
-**7th March 2019** - Plan the skeleton of implementation
-
-**8th March 2019** - Building Big-Little
+**8th March 2019** - Further `Module`s need to be implemented, that would support multiple `Branch`es and the merging between them. 
 
 **9th March 2019** - Building Big-Little
 
@@ -50,7 +55,16 @@ conda create -e env.yml
 
 ## Scope
 
-Run the following command 
+The scope of this reproducibility challenge is to reproduce the table given below. And try to come up with a generalized application that would take ResNet like Architectures and come up with Big-Little Architecture for the same.
+
+| Model                   | Top-1 Error (%) |
+|-------------------------|-----------------|
+| Resnet-50               | 23.66           |
+| bL-Resnet-50 (a=2, b=2) | 22.72           |
+| bL-Resnet-50 (a=2, b=4) | 22.69           |
+| bL-Resnet-50 (a=4, b=2) | 23.20           |
+| bL-Resnet-50 (a=4, b=2) | 23.15           |
+
 
 ## Reproduced Results
 
