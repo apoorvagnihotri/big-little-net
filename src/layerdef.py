@@ -9,6 +9,7 @@ import inspect
 import utils
 import math
 
+
 class LayerDef:
     r"""Used to store the layer definitions and the attributes of the
     layer corresponding to the biggest branch.
@@ -26,20 +27,15 @@ class LayerDef:
         self.defn = defn
         self.kwargs = kwargs
 
-    def get_Kbranch_layer(self, K, **addtional_kwargs):
-        r"""Return an initialized `Layer` with arguments
-        corresponding to `K`th branch of Big-Little Net
-
-        * :attr:`K` `Branch` number.
-        * :attr:`addtional_kwargs` Additional kwargs that would overwrite
-        the defaults given in Big-Little Net Architecture.
+    def get_Kbranch_layer(self, **kwargs):
+        r"""This function is called by `Block`, when it is trying to
+        instantitate the `Layer`s corresponding to the correct branch
+        with attributes correspoing to the Big-Little Net.
         """
         # getting the kwargs for `Layer` corresp. to `K`th branch
-        ckwargs = self._custom_kwargs(K)
+        ckwargs = self._custom_kwargs(**kwargs)
         ckwargs = utils.modify_args(self.kwargs, ckwargs)
-        # overwrite with user provided additional_kwargs
-        final_kwargs = utils.modify_args(ckwargs, addtional_kwargs)
-        return self.defn(**final_kwargs)
+        return self.defn(**ckwargs)
 
     def __repr__(self):
         r"""representation of stored stuff useful for debugging"""
@@ -48,20 +44,17 @@ class LayerDef:
         func_doc = inspect.getdoc(self.defn)
         return layer_doc + hr + func_doc
 
-    def __call__(self, K):
-        return self.get_Kbranch_layer(K)
+    def __call__(self, **kwargs):
+        return self.get_Kbranch_layer(**kwargs)
 
     def _custom_kwargs(self, K):
         r"""No specialization, ignore this case"""
         return {}
 
 
-# Modules below are for ease of use during implementation of Big-Little Net
-
 class Conv2dDef(LayerDef):
     r"""Object for storing a `nn.Conv2d` function defination.
-    Uses the convolution definitions from `renset.py`
-
+    
     * :attr:`in_channels` number of input planes
     * :attr:`out_channels` number of output planes
     * :attr:`stride` stride to be chosen for this convolution layer
@@ -75,8 +68,10 @@ class Conv2dDef(LayerDef):
                          padding=1,
                          bias=False)
 
-    def _custom_kwargs(self, K, alpha):
-        r"""Returns custom attributes for `Conv` in `K`th `Branch`"""
+    def _custom_kwargs(self, **kwargs):
+        r"""Returns custom attributes for `Conv` in `K`th `Branch`."""
+        K = kwargs['K']
+        alpha = kwargs['alpha']
         if K: # Little Branch
             ckwargs = {"in_channels": math.ceil(self.kwargs["in_channels"]/(alpha)),
                        "out_channels": math.ceil(self.kwargs["out_channels"]/(alpha))}
