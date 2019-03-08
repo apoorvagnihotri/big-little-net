@@ -4,7 +4,7 @@
 
 This is an unofficial submission to ICLR 2019 Reproducibility Challenge. The central theme of the work by the authors is to reduce the computations while improving the accuracy in the case of Object Recognition and Speech Recognition by using multiple branches with different scales in the CNN architecture. This helps in feature detection at different scales. The authors claim that in the case of Object Recognition they can improve the accuracy by 1% while reducing the computations by 1/3rd of the original.
 
-I am trying to build an application that would be able to take in a Resnet-Like Architecture and automatically come up with the Big-Little variant of it. This has been made difficult as in the case of `K > 2` (`K` denotes the number of branches in Big-Little Net) does not follow a specific formula for the number of Residual Blocks and Convolutional Layers for each of the branches. My appication would only work for the case of `K = 2`.
+I am trying to build an application that would be able to take in a Resnet-Like Architecture and automatically come up with the Big-Little variant of it. This has been made difficult as in the case of `num_branch > 2` (`num_branch` denotes the number of branches in Big-Little Net) does not follow a specific formula for the number of Residual Blocks and Convolutional Layers for each of the branches. My appication would only work for the case of `num_branch = 2`.
 
 
 ## Checklist
@@ -27,7 +27,7 @@ I am trying to build an application that would be able to take in a Resnet-Like 
 
 **7th March 2019** - Plan the skeleton of implementation | Coded `Block` and `LayerDef` for BLNet which will help any architecture to be ported to Big-Little Net if is similar to ResNet. | Understand Inception Code to work out ways to implement `Branch`es in Big-Little Net.
 
-**8th March 2019** - Setback: The original paper doesn't always follow specific guidelines for `K > 2`. Therefore my approach to automating for `K > 2` would not work. Currently only trying to make the automation work for `K=1` and `K=2`.
+**8th March 2019** - Setback: The original paper doesn't always follow specific guidelines for `num_branch > 2`. Therefore my approach to automating for `num_branch > 2` would not work. Currently only trying to make the automation work for `num_branch=1` and `num_branch=2`.
 
 
 ## Plan

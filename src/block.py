@@ -2,37 +2,61 @@
 """
 import torch.nn as nn
 import inspect
+import math
 
 class Block(nn.Module):
-    r"""Part of `BLModule`, used to store a multiple `Layer` objects
+    r"""Part of `BLModule`, used to store multiple `Layer` objects
     given the branch number `K`.
 
-    * :attr:`layer_defs` A list of `LayerDef`s, used to create
-    `Layer`s according to the branch number.
+    * :attr:`residual_block` An object that contains a list of
+    `LayerDef`s, for a single `ResBlock` in the Architecture
 
-    * :attr:`K` is the branch number we are trying to build the
-    `Block` of `Layer`s for.
+    * :attr:`reps` The number of time `residual_block` pass is to
+    be repeated in the big branch. 
+
+    * :attr:`K` Denotes the Little Branch if `1`.
+
+    * :attr:`alpha` The scaler which is used to reduce the number of
+    kernels in the Little-Branch.
+
+    * :attr:`beta` the complexity controller in Big-Little Nets
+    that controls the number of `ResBlock`s in `K`th branch.
     """
-    def __init__(self, layer_defs, K):
+    def __init__(self, residual_block, reps, K, alpha, beta):
         super().__init__()
-        self.layer_defs = layer_defs
+        self.residual_block = residual_block
         self.layers = []
         self.K = K
-        # init all `Layer`s from the corresp. `LayerDef`s.
-        for layer_def in layer_defs:
-            self.layers.append(layer_def.get_Kbranch_layer(K))
+        if K: # Little Branch
+            self.num_ResBlock = max(math.ceil(reps / beta) - 1, 1)
+        else: # Big Branch
+            self.num_ResBlock = reps
+        # repeat for the number of reps of ResBlock for `K`th branch.
+        for num_of_residuals in range(self.num_ResBlock):
+            for layerdef in residual_block:
+                self.layers.append(layerdef.get_Kbranch_layer(K=K, alpha=alpha))
 
     def forward(self, x):
-        identity = x
         for layer in self.layers:
-            x = layer(x) # allowed as type(layer) == `nn.Module`
+            x = layer(x)
         return x
 
     def __repr__(self):
         r"""for debugging purposes"""
         branchstring = "This is a `Block` of `Layer`s in " + str(self.K) + "th `Branch`"
-        layerdef_string = "\n\n`Layer`s:\n["
-        for layerdef in self.layer_defs:
-            layerdef_string += inspect.getdoc(layerdef.defn) + ", "
-        layerdef_string = layerdef_string[:len(layerdef_string)-2] + "]"
+        layerdef_string = "\n\n`Layer`s:\n\n"
+        for layer in self.layers:
+            layerdef_string += str(layer) + "\n"
         return branchstring + layerdef_string
+
+# class UpSample(nn.Module):
+    
+
+# class Transition(nn.Module):
+#     r"""Used to combine K branches"""
+#     def __init__(self, method='add'):
+#         super().__init__()
+
+#     def forward(self, xs):
+#         if method == 'add':
+#             pass
