@@ -9,12 +9,12 @@ This is an unofficial submission to ICLR 2019 Reproducibility Challenge. The cen
 
 - [x] Getting the resnet baseline from torchvision
 - [x] Skeleton of the Project
-- [ ] Building Blocks
-  - [ ] `ResBlock`
-  - [ ] `ResBlockB`
-  - [ ] `ResBlockL`
-  - [ ] `TransitionLayer`
-- [ ] Integrating `Block`s
+- [x] Building Blocks
+  - [x] `ResBlock`
+  - [x] `ResBlockB`
+  - [x] `ResBlockL`
+  - [x] `TransitionLayer`
+- [ ] Integrating Blocks
 - [ ] Testing the baseline
 - [ ] Injecting Resnet into Big-Little Net
 - [ ] Run the models on GPUs
@@ -30,13 +30,13 @@ This is an unofficial submission to ICLR 2019 Reproducibility Challenge. The cen
 
 **8th March 2019** - Setback: The original paper doesn't always follow specific guidelines for `num_branch > 2`. Therefore my approach to automating for `num_branch > 2` would not work. Currently only trying to make the automation work for `num_branch=1` and `num_branch=2`.
 
-**9th March 2019** - Rethought the skeleton of the Project. | <_Setback_> | Retry from scratch.
+**9th March 2019** - Rethought the skeleton of the Project. | <_Setback_> | Prepared `ResBlock`, and it's children `ResBlockB`, `ResBlockL` and `TransitionLayer` for BL-Net.
 
 _Setback_: The application approach needed the users to be informed of all the caveats of Big-Little Nets and its Network Architecture, threrfore beating the purpose of the generalized application for uninformed users.
 
 ## Plan
 
-**10th March 2019** - Work on Implement simplified variant
+**10th March 2019** - Try running the bL-Resnet50 model.
 
 
 ## Requirements
