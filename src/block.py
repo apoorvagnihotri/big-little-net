@@ -28,13 +28,15 @@ class Block(nn.Module):
         self.layers = []
         self.K = K
         if K: # Little Branch
-            self.num_ResBlock = max(math.ceil(reps / beta) - 1, 1)
+            self.reps = max(math.ceil(reps / beta) - 1, 1)
         else: # Big Branch
-            self.num_ResBlock = reps
+            self.reps = reps
         # repeat for the number of reps of ResBlock for `K`th branch.
-        for num_of_residuals in range(self.num_ResBlock):
+        for RB_it in range(self.reps):
             for layerdef in residual_block:
-                self.layers.append(layerdef.get_Kbranch_layer(K=K, alpha=alpha))
+                self.layers.append(layerdef.get_Kbranch_layer(K=K,
+                                                              alpha=alpha,
+                                                              RB_it=RB_it))
 
     def forward(self, x):
         for layer in self.layers:

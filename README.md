@@ -6,6 +6,9 @@ This is an unofficial submission to ICLR 2019 Reproducibility Challenge. The cen
 
 I am trying to build an application that would be able to take in a Resnet-Like Architecture and automatically come up with the Big-Little variant of it. This has been made difficult as in the case of `num_branch > 2` (`num_branch` denotes the number of branches in Big-Little Net) does not follow a specific formula for the number of Residual Blocks and Convolutional Layers for each of the branches. My appication would only work for the case of `num_branch = 2`.
 
+**NOTE: I was trying to make an application that could be called by an uninformed user to directly test the accuracy increase and computation reduction in incorporating the Big-Little Net structure. But there are way too many variables that need to be defined by the user in order to use the application, and that beats the point of the application.
+Therefore I would focus on the usual approach, as followed in usual implementations of CNN Architectures in the PyTorch.**
+
 
 ## Checklist
 

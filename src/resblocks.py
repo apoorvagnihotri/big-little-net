@@ -36,6 +36,7 @@ class ResBlock():
     def __init__(self, layerdefs):
         self.layerdefs = layerdefs
         self.size = layerdefs
+        self.final_out_channels = layerdefs.
 
     def __getitem__(self, key):
         return self.layerdefs[key]
@@ -46,3 +47,4 @@ class ResBlock():
     def __repr__(self):
         return "ResBlock storing " + str([ld.defn for ld in self.layerdefs])
 
+# ResBlock can store the final out_channels....

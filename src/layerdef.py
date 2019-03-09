@@ -47,9 +47,9 @@ class LayerDef:
     def __call__(self, **kwargs):
         return self.get_Kbranch_layer(**kwargs)
 
-    def _custom_kwargs(self, K):
+    def _custom_kwargs(self, **kwargs):
         r"""No specialization, ignore this case"""
-        return {}
+        return kwargs
 
 
 class Conv2dDef(LayerDef):
@@ -59,7 +59,7 @@ class Conv2dDef(LayerDef):
     * :attr:`out_channels` number of output planes
     * :attr:`stride` stride to be chosen for this convolution layer
     """
-    def __init__(self, in_channels, out_channels, kernel_size, stride=1):
+    def __init__(self, in_channels, out_channels, kernel_size, stride=1, ds=False):
         super().__init__(nn.Conv2d,
                          in_channels=in_channels,
                          out_channels=out_channels,
@@ -67,16 +67,22 @@ class Conv2dDef(LayerDef):
                          stride=1,
                          padding=1,
                          bias=False)
+        self.ds = ds
 
     def _custom_kwargs(self, **kwargs):
         r"""Returns custom attributes for `Conv` in `K`th `Branch`."""
         K = kwargs['K']
         alpha = kwargs['alpha']
+        RB_it = kwargs['RB_it'] # the iteration in ResBlock reps 
         if K: # Little Branch
             ckwargs = {"in_channels": math.ceil(self.kwargs["in_channels"]/(alpha)),
                        "out_channels": math.ceil(self.kwargs["out_channels"]/(alpha))}
         else: # Big Branch
-            ckwargs = {}
+            # the first 3x3 convolution (depicted with ds=True,
+            # and 1st ResBlock) is with stride 2
+            if (self.ds) and (RB_it == 0):
+                ckwargs = {"stride" = 2}
+            if ()
         return ckwargs
 
 # class FC(LayerDef): ### Need to get to the end of the Network
@@ -95,3 +101,7 @@ class Conv2dDef(LayerDef):
 #                    "out_channels": math.ceil(self.kwargs["out_channels"]/(alpha))}
 #         return ckwargs
 #     pass
+
+# We can use a flag passed (that would be stored in the ResBlock) to
+# get_Kbranch_layer for understanding where we would like to upsample
+# or something
