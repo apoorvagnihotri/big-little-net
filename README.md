@@ -14,9 +14,9 @@ This is an unofficial submission to ICLR 2019 Reproducibility Challenge. The cen
   - [x] `ResBlockB`
   - [x] `ResBlockL`
   - [x] `TransitionLayer`
-- [ ] Integrating Blocks
+- [ ] Getting runner code ready
 - [ ] Testing the baseline
-- [ ] Injecting Resnet into Big-Little Net
+- [ ] Integrating Big-Little Net Blocks
 - [ ] Run the models on GPUs
 - [ ] Testing the reproducibility
 
@@ -36,7 +36,11 @@ _Setback_: The application approach needed the users to be informed of all the c
 
 ## Plan
 
-**10th March 2019** - Try running the bL-Resnet50 model.
+**10th March 2019** - Setup Runner code and try running Resnet Models
+
+**11th March 2019** - Integrate the Big-Little Network.
+
+**12th March 2019** - Try running the bL-Resnet50 model.
 
 
 ## Requirements
