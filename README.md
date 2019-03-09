@@ -4,19 +4,17 @@
 
 This is an unofficial submission to ICLR 2019 Reproducibility Challenge. The central theme of the work by the authors is to reduce the computations while improving the accuracy in the case of Object Recognition and Speech Recognition by using multiple branches with different scales in the CNN architecture. This helps in feature detection at different scales. The authors claim that in the case of Object Recognition they can improve the accuracy by 1% while reducing the computations by 1/3rd of the original.
 
-I am trying to build an application that would be able to take in a Resnet-Like Architecture and automatically come up with the Big-Little variant of it. This has been made difficult as in the case of `num_branch > 2` (`num_branch` denotes the number of branches in Big-Little Net) does not follow a specific formula for the number of Residual Blocks and Convolutional Layers for each of the branches. My appication would only work for the case of `num_branch = 2`.
-
-**NOTE: I was trying to make an application that could be called by an uninformed user to directly test the accuracy increase and computation reduction in incorporating the Big-Little Net structure. But there are way too many variables that need to be defined by the user in order to use the application, and that beats the point of the application.
-Therefore I would focus on the usual approach, as followed in usual implementations of CNN Architectures in the PyTorch.**
-
 
 ## Checklist
 
-- [x] Getting the baseline from torchvision
+- [x] Getting the resnet baseline from torchvision
 - [x] Skeleton of the Project
-- [ ] Building Big-Little Module
-  - [x] 1st half of the components (without branches | `Block` and `LayerDef`)
-  - [ ] 2nd half of the components
+- [ ] Building Blocks
+  - [ ] `ResBlock`
+  - [ ] `ResBlockB`
+  - [ ] `ResBlockL`
+  - [ ] `TransitionLayer`
+- [ ] Integrating `Block`s
 - [ ] Testing the baseline
 - [ ] Injecting Resnet into Big-Little Net
 - [ ] Run the models on GPUs
@@ -32,15 +30,13 @@ Therefore I would focus on the usual approach, as followed in usual implementati
 
 **8th March 2019** - Setback: The original paper doesn't always follow specific guidelines for `num_branch > 2`. Therefore my approach to automating for `num_branch > 2` would not work. Currently only trying to make the automation work for `num_branch=1` and `num_branch=2`.
 
+**9th March 2019** - Rethought the skeleton of the Project. | <_Setback_> | Retry from scratch.
+
+_Setback_: The application approach needed the users to be informed of all the caveats of Big-Little Nets and its Network Architecture, threrfore beating the purpose of the generalized application for uninformed users.
 
 ## Plan
 
-**8th March 2019** - Further `Module`s need to be implemented, that would support multiple `Branch`es and the merging between them. 
-
-**9th March 2019** - Building Big-Little
-
-**10th March 2019** - Injecting Resnet into Big-Little Net
-...
+**10th March 2019** - Work on Implement simplified variant
 
 
 ## Requirements
@@ -58,7 +54,7 @@ conda create -e env.yml
 
 ## Scope
 
-The scope of this reproducibility challenge is to reproduce the table given below. And try to come up with a generalized application that would take ResNet like Architectures and come up with Big-Little Architecture for the same.
+The scope of this reproducibility challenge is to reproduce the table given below.
 
 | Model                   | Top-1 Error (%) |
 |-------------------------|-----------------|
@@ -67,6 +63,10 @@ The scope of this reproducibility challenge is to reproduce the table given belo
 | bL-Resnet-50 (a=2, b=4) | 22.69           |
 | bL-Resnet-50 (a=4, b=2) | 23.20           |
 | bL-Resnet-50 (a=4, b=2) | 23.15           |
+
+The Network architecture for bL-Resnet-50:
+
+![](https://i.imgur.com/mQ3M5T0.png)
 
 
 ## Reproduced Results
