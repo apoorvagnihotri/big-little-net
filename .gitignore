@@ -1,2 +1,4 @@
 */__pycache__/
 */data/
+checkpoint.pth.tar
+*/valprep.sh

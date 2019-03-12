@@ -14,8 +14,8 @@ This is an unofficial submission to ICLR 2019 Reproducibility Challenge. The cen
   - [x] `ResBlockB`
   - [x] `ResBlockL`
   - [x] `TransitionLayer`
-- [ ] Getting runner code ready
-- [ ] Testing the baseline
+- [x] Getting runner code ready
+- [x] Running baseline on slimmed data
 - [ ] Integrating Big-Little Net Blocks
 - [ ] Run the models on GPUs
 - [ ] Testing the reproducibility
@@ -34,13 +34,14 @@ This is an unofficial submission to ICLR 2019 Reproducibility Challenge. The cen
 
 _Setback_: The application approach needed the users to be informed of all the caveats of Big-Little Nets and its Network Architecture, threrfore beating the purpose of the generalized application for uninformed users.
 
+**12th March 2019** - Got runner code for ImageNet from [Pytorch Examples](https://github.com/pytorch/examples/tree/master/imagenet) and ran `resnet18` on a slimmed dataset.
+
+
 ## Plan
 
-**10th March 2019** - Setup Runner code and try running Resnet Models
+**13th March 2019** - Combine Components in Big-Little Network.
 
-**11th March 2019** - Integrate the Big-Little Network.
-
-**12th March 2019** - Try running the bL-Resnet50 model.
+**15th March 2019** - Try running the bL-Resnet50 model.
 
 
 ## Requirements
@@ -49,11 +50,11 @@ This repository uses:
 - `Python 3.7`
 - `PyTorch 1.0.1`
 
-Using GPU is _highly_ recommended.
+Using GPU is _highly_ recommended, the ImageNet dataset is nearly 160GBs, and the models are deep.
 
 Recreate the environment using the following command.
 ```sh
-conda create -e env.yml
+conda create -n bln --file env.yml
 ```
 
 ## Scope
@@ -78,7 +79,7 @@ The Network architecture for bL-Resnet-50:
 
 ## Training
 
-Training is controlled by various options, which can be passed through the command line. The defaults can be looked at, in the file [``utils/options.py``](https://github.com/k0pch4/big-little-net/blob/master/utils/options.py). Try running for the help menu:
+Training is controlled by various options, which can be passed through the command line. The defaults can be looked at, in the file [``utils/options.py``](https://github.com/k0pch4/big-little-net/blob/master/utils/options.py). Try running below, for the help menu:
 ```sh
 python3 train.py --help
 ```
