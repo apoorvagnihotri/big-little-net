@@ -143,49 +143,49 @@ class bL_ResNet(nn.Module):
 
     def forward(self, x):
         # Conv
-        main = self.conv1(x)
-        main = self.bn1(main)
-        main = self.relu(main)
+        base1 = self.conv1(x)
+        base1 = self.bn1(base1)
+        base1 = self.relu(base1)
 
         # pass 2 | bL-module
-        little = main
-        main = self.conv2(main)
-        main = self.bn2(main)
-        main = self.relu(main)
-        little = self.littleblock(little)
-        assert (main.shape == little.shape)
-        main += little
+        little1 = base1; big1 = base1;
+        big1 = self.conv2(big1)
+        big1 = self.bn2(big1)
+        big1 = self.relu(big1)
+        little1 = self.littleblock(little1)
+        assert (big1.shape == little1.shape)
+        base2 = little1 + big1
 
         # pass 3 | `ResBlockB`s & `ResBlockL`s  planes = 64
-        little = main
-        main = self.big_layer1(main)
-        little = self.little_layer1(little)
-        print ('1st layer passed')
-        main = self.transition1([main, little])
+        little2 = base2; big2 = base2;
+        big2 = self.big_layer1(big2)
+        little2 = self.little_layer1(little2)
+        # print ('1st layer passed')
+        base3 = self.transition1([big2, little2])
 
         # pass 4 | planes = 128
-        little = main
-        main = self.big_layer2(main)
-        little = self.little_layer2(little)
-        print ('2nd layer passed')
-        main = self.transition2([main, little])
+        little3 = base3; big3 = base3;
+        big3 = self.big_layer2(big3)
+        little3 = self.little_layer2(little3)
+        # print ('2nd layer passed')
+        base4 = self.transition2([big3, little3])
 
         # pass 5 | planes = 256
-        little = main
-        main = self.big_layer3(main)
-        little = self.little_layer3(little)
-        print ('3rd layer passed')
-        main = self.transition3([main, little])
+        little4 = base4; big4 = base4;
+        big4 = self.big_layer3(big4)
+        little4 = self.little_layer3(little4)
+        # print ('3rd layer passed')
+        out = self.transition3([big4, little4])
 
         # pass 6 | Res_Block | planes = 512
-        main = self.res_layer1(main)
+        out = self.res_layer1(out)
 
         # avg pooling
-        main = self.avgpool(main)
-        main = main.view(main.size(0), -1)
-        main = self.fc(main)
+        out = self.avgpool(out)
+        out = out.view(out.size(0), -1)
+        out = self.fc(out)
 
-        return main
+        return out
 
 
 def bl_resnet50(pretrained=False, **kwargs):
