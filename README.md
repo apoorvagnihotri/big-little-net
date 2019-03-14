@@ -17,7 +17,8 @@ This is an unofficial submission to ICLR 2019 Reproducibility Challenge. The cen
 - [x] Getting runner code ready
 - [x] Running baseline on slimmed data
 - [x] Integrating Big-Little Net Blocks
-- [ ] Debug Issues
+- [x] Debug Issues
+- [ ] Check correctness
 - [ ] Run the models on GPUs
 - [ ] Testing the reproducibility
 
@@ -82,7 +83,7 @@ The Network architecture for bL-Resnet-50:
 
 ## Training
 
-Training is controlled by various options, which can be passed through the command line. The defaults can be looked at, in the file [``utils/options.py``](https://github.com/k0pch4/big-little-net/blob/master/utils/options.py). Try running below, for the help menu:
+Training is controlled by various options, which can be passed through the command line. The defaults can be looked at, in the file [``utils/options.py``](https://github.com/k0pch4/big-little-net/blob/master/helper/options.py). Try running below, for the help menu:
 ```sh
 python3 train.py --help
 ```
