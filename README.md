@@ -16,7 +16,8 @@ This is an unofficial submission to ICLR 2019 Reproducibility Challenge. The cen
   - [x] `TransitionLayer`
 - [x] Getting runner code ready
 - [x] Running baseline on slimmed data
-- [ ] Integrating Big-Little Net Blocks
+- [x] Integrating Big-Little Net Blocks
+- [ ] Debug Issues
 - [ ] Run the models on GPUs
 - [ ] Testing the reproducibility
 
@@ -36,12 +37,14 @@ _Setback_: The application approach needed the users to be informed of all the c
 
 **12th March 2019** - Got runner code for ImageNet from [Pytorch Examples](https://github.com/pytorch/examples/tree/master/imagenet) and ran `resnet18` on a slimmed dataset.
 
+**14th March 2019** - Integrated Big-Little `Block`s. Running the code raises some assertions, need to check these.
+
 
 ## Plan
 
-**13th March 2019** - Combine Components in Big-Little Network.
+**16th March 2019** - Find the errors in the network code.
 
-**15th March 2019** - Try running the bL-Resnet50 model.
+**18th March 2019** - Reproduce the results for `bL-ResNet50`.
 
 
 ## Requirements
@@ -83,3 +86,33 @@ Training is controlled by various options, which can be passed through the comma
 ```sh
 python3 train.py --help
 ```
+
+## Citations
+
+Please consider citing the original authors if you find the repository useful.
+
+```
+@article{DBLP:journals/corr/abs-1807-03848,
+  author    = {Chun{-}Fu Chen and
+               Quanfu Fan and
+               Neil Mallinar and
+               Tom Sercu and
+               Rog{\'{e}}rio Schmidt Feris},
+  title     = {Big-Little Net: An Efficient Multi-Scale Feature Representation for
+               Visual and Speech Recognition},
+  journal   = {CoRR},
+  volume    = {abs/1807.03848},
+  year      = {2018},
+  url       = {http://arxiv.org/abs/1807.03848},
+  archivePrefix = {arXiv},
+  eprint    = {1807.03848},
+  timestamp = {Mon, 13 Aug 2018 16:47:58 +0200},
+  biburl    = {https://dblp.org/rec/bib/journals/corr/abs-1807-03848},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+```
+
+Code snippets taken from the following locations were extremely useful to be able to reproduce the results.
+
+- [ResNet Model in PyTorch](https://github.com/pytorch/vision/blob/master/torchvision/models/resnet.py)
+- [ImageNet Runner Code](https://github.com/pytorch/examples/tree/master/imagenet)
