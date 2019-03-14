@@ -156,7 +156,6 @@ class TransitionLayer(nn.Module):
                       expansion = expansion, stride = stride)
 
     def forward(self, xs):
-        print (xs[0].shape, xs[1].shape)
         assert(xs[0].shape == xs[1].shape)
         out = xs[0] + xs[1] # merge via add
 
