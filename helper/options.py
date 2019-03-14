@@ -26,6 +26,10 @@ def read_args(model_names):
     parser.add_argument('--wd', '--weight-decay', default=1e-4, type=float,
                         metavar='W', help='weight decay (default: 1e-4)',
                         dest='weight_decay')
+    parser.add_argument('--alpha', default=2, type=int, dest='alpha',
+                        help='scaler for convolutions (default: 2)')
+    parser.add_argument('--beta', default=4, type=int, dest='beta',
+                        help='scaler for Residual Blocks(default: 4)')
     parser.add_argument('-p', '--print-freq', default=10, type=int,
                         metavar='N', help='print frequency (default: 10)')
     parser.add_argument('--resume', default='', type=str, metavar='PATH',
