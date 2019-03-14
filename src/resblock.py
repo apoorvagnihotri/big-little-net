@@ -1,5 +1,7 @@
 '''This file contains different blocks that are used in
 the Big-Little Net Architecture.'''
+import torch.nn as nn
+
 
 # Custom Conv2D layers
 def conv3x3(in_planes, out_planes, stride=1):
@@ -14,10 +16,23 @@ def conv1x1(in_planes, out_planes, stride=1):
 
 
 class ResBlock(nn.Module):
-    r'''The main class of Residual Blocks.'''
+    r'''The main class of Residual Blocks.
 
-    def __init__(self, inplanes, planes, expansion, stride):
+    :attr:`inplanes` the number of activations in last layer
+    :attr:`planes` the number of activations inside the block layers
+    :attr:`downsample` a `nn.Sequential` object, used to match the size
+    and layers of input image to perform point-wise addition to the
+    output of the block.
+    '''
+
+    def __init__(self, **kwargs):
         super().__init__()
+        inplanes = kwargs['inplanes']
+        planes = kwargs['planes']
+        stride = kwargs['stride']
+        expansion = kwargs['expansion']
+
+        # Both self.conv2 and self.downsample layers downsample the input when stride != 1
         self.conv1 = conv1x1(inplanes, planes)
         self.bn1 = nn.BatchNorm2d(planes)
         self.conv2 = conv3x3(planes, planes, stride)
@@ -26,7 +41,23 @@ class ResBlock(nn.Module):
         self.bn3 = nn.BatchNorm2d(planes * expansion)
         self.relu = nn.ReLU(inplace=True)
         self.expansion = expansion
+        self.inplanes = inplanes
+        self.planes = planes
         self.stride = stride
+        self.downsample = self._find_downsampler()
+
+    def _find_downsampler(self):
+        '''used to downsample identity for adding to output'''
+        downsample = None
+        if self.stride != 1 or self.inplanes != self.planes * self.expansion:
+            downsample = nn.Sequential(
+                    conv1x1(
+                      self.inplanes,
+                      self.planes * self.expansion,
+                      self.stride),
+                    nn.BatchNorm2d(self.planes * self.expansion),
+                )
+        return downsample
 
     def forward(self, x):
         identity = x
@@ -42,24 +73,35 @@ class ResBlock(nn.Module):
         out = self.conv3(out)
         out = self.bn3(out)
 
+        if self.downsample is not None:
+            identity = self.downsample(x)
+
+        assert(identity.shape == out.shape)
         out += identity
         out = self.relu(out)
 
         return out
 
 
-class ResBlockB(ResBlock):
-    r'''Specialization of the ResBlock for the Big branch.'''
+class ResBlockB(nn.Module):
+    r'''ResBlock for the Big branch.'''
 
-    def __init__(self, inplanes, planes, expansion, stride = 2):
+    def __init__(self, **kwargs):
+        super().__init__()
+        inplanes = kwargs['inplanes']
+        planes = kwargs['planes']
+        stride = kwargs['stride']
+        expansion = kwargs['expansion']
+
         # calling the immediate parent's init.
-        ResBlock.__init__(self, inplanes = inplanes, planes = planes,
-                          expansion = expansion, stride = stride)
+        self.rb = ResBlock(inplanes = inplanes, planes = planes,
+                      stride = stride, expansion = expansion)
         # upsample
-        self.upsample = nn.Upsample(scale_factor=2, mode='bilinear') # fixed K = 2
+        self.upsample = nn.Upsample(scale_factor = 2, # fixed for K = 2
+                                    mode='bilinear')
 
     def forward(self, x):
-        out = ResBlock.forward(x)
+        out = self.rb(x)
 
         # increasing image size
         out = self.upsample(out)
@@ -67,17 +109,31 @@ class ResBlockB(ResBlock):
         return out
 
 
-class ResBlockL(ResBlock):
-    r'''Specialization of the ResBlock for the Little branch.'''
+class ResBlockL(nn.Module):
+    r'''ResBlock for the Little branch.
 
-    def __init__(self, inplanes, planes, expansion, stride = 1):
-        ResBlock.__init__(self, inplanes = inplanes, planes = planes,
-                          expansion = expansion, stride = stride)
-        self.conv4 = conv1x1(planes * expansion, inplanes)
-        self.bn4 = nn.BatchNorm2d(inplanes)
+    :attr:`alpha` the scalar with wich we need to reduce the number of
+    layers in the ResBlock
+    '''
+
+    def __init__(self, **kwargs):
+        super().__init__()
+        inplanes = kwargs['inplanes']
+        planes = kwargs['planes']
+        alpha = kwargs['alpha']
+        stride = kwargs['stride']
+        expansion = kwargs['expansion']
+
+        planes_r = int(planes / alpha)
+        self.rb = ResBlock(inplanes = inplanes, planes = planes_r,
+                      stride = stride, expansion = expansion)
+        # for increasing the # of layers
+        self.conv4 = conv1x1(planes_r * expansion, planes * expansion)
+        self.bn4 = nn.BatchNorm2d(planes * expansion)
+        self.relu = nn.ReLU(inplace=True)
 
     def forward(self, x):
-        out = ResBlock.forward(x)
+        out = self.rb(x)
 
         # increasing layers
         out = self.conv4(out)
@@ -87,16 +143,23 @@ class ResBlockL(ResBlock):
         return out
 
 
-class TransitionLayer(ResBlock):
+class TransitionLayer(nn.Module):
     r'''A Specialization of ResBlock with support for merging branches'''
 
-    def __init__(self, inplanes, planes, expansion, stride):
-        ResBlock.__init__(self, inplanes = inplanes, planes = planes,
-                          expansion = expansion, stride = stride)
+    def __init__(self, **kwargs):
+        super().__init__()
+        inplanes = kwargs['inplanes']
+        planes = kwargs['planes']
+        stride = kwargs['stride']
+        expansion = kwargs['expansion']
 
-    def forward(self, x1, x2): # fixed K = 2
-        out = x1 + x2 # merge via add
+        self.rb = ResBlock(inplanes = inplanes, planes = planes,
+                      expansion = expansion, stride = stride)
 
-        out = ResBlock.forward(out)
+    def forward(self, xs):
+        assert(xs[0].shape == xs[1].shape)
+        out = xs[0] + xs[1] # merge via add
+
+        out = self.rb(out)
 
         return out
