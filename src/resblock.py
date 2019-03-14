@@ -124,12 +124,11 @@ class ResBlockL(nn.Module):
         stride = kwargs['stride']
         expansion = kwargs['expansion']
 
-        planes_r = int(planes / alpha)
-        self.rb = ResBlock(inplanes = inplanes, planes = planes_r,
+        self.rb = ResBlock(inplanes = inplanes, planes = planes,
                       stride = stride, expansion = expansion)
         # for increasing the # of layers
-        self.conv4 = conv1x1(planes_r * expansion, planes * expansion)
-        self.bn4 = nn.BatchNorm2d(planes * expansion)
+        self.conv4 = conv1x1(planes * expansion, planes * expansion * alpha)
+        self.bn4 = nn.BatchNorm2d(planes * expansion * alpha)
         self.relu = nn.ReLU(inplace=True)
 
     def forward(self, x):
@@ -157,6 +156,7 @@ class TransitionLayer(nn.Module):
                       expansion = expansion, stride = stride)
 
     def forward(self, xs):
+        print (xs[0].shape, xs[1].shape)
         assert(xs[0].shape == xs[1].shape)
         out = xs[0] + xs[1] # merge via add
 
