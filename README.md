@@ -40,10 +40,12 @@ _Setback_: The application approach needed the users to be informed of all the c
 
 **14th March 2019** - Integrated Big-Little `Block`s. Running the code raises some assertions, need to check these.
 
+**16th March 2019** - Corrected assersions, working to correct any error in architecture using library for [visualizing](https://github.com/waleedka/hiddenlayer) architecture.
+
 
 ## Plan
 
-**16th March 2019** - Find the errors in the network code.
+**17th March 2019** - Try running on Distributed Environment.
 
 **18th March 2019** - Reproduce the results for `bL-ResNet50`.
 
@@ -117,3 +119,4 @@ Code snippets taken from the following locations were extremely useful to be abl
 
 - [ResNet Model in PyTorch](https://github.com/pytorch/vision/blob/master/torchvision/models/resnet.py)
 - [ImageNet Runner Code](https://github.com/pytorch/examples/tree/master/imagenet)
+- [Visualizing Code](https://github.com/waleedka/hiddenlayer)
