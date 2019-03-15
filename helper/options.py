@@ -3,11 +3,11 @@ import argparse
 def read_args(model_names):
     parser = argparse.ArgumentParser(description='ImageNet Training using Big-Little Network')
     parser.add_argument('data', metavar='DIR', help='path to dataset')
-    parser.add_argument('-a', '--arch', metavar='ARCH', default='resnet18',
+    parser.add_argument('-a', '--arch', metavar='ARCH', default='bl_resnet50',
                         choices=model_names,
                         help='model architecture: ' +
                             ' | '.join(model_names) +
-                            ' (default: resnet18)')
+                            ' (default: bl_resnet50)')
     parser.add_argument('-j', '--workers', default=4, type=int, metavar='N',
                         help='number of data loading workers (default: 4)')
     parser.add_argument('--epochs', default=110, type=int, metavar='N',

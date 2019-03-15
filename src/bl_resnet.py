@@ -194,7 +194,7 @@ def bl_resnet50(pretrained=False, **kwargs):
     Args:
         pretrained (bool): If True, returns a model pre-trained on ImageNet
     """
-    model = bL_ResNet([2, 3, 5, 1], **kwargs)
+    model = bL_ResNet([2, 3, 5, 3], **kwargs)
     # print ('model created')
     if pretrained:
         model.load_state_dict(model_zoo.load_url(model_urls['resnet50']))

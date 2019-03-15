@@ -1,6 +1,7 @@
 '''This file contains different blocks that are used in
 the Big-Little Net Architecture.'''
 import torch.nn as nn
+import torch.nn.functional as F
 
 
 # Custom Conv2D layers
@@ -96,15 +97,12 @@ class ResBlockB(nn.Module):
         # calling the immediate parent's init.
         self.rb = ResBlock(inplanes = inplanes, planes = planes,
                       stride = stride, expansion = expansion)
-        # upsample
-        self.upsample = nn.Upsample(scale_factor = 2, # fixed for K = 2
-                                    mode='bilinear')
 
     def forward(self, x):
         out = self.rb(x)
 
         # increasing image size
-        out = self.upsample(out)
+        out = F.interpolate(out, scale_factor=2, mode='bilinear')
 
         return out
 
