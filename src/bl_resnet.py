@@ -31,12 +31,13 @@ class bL_ResNet(nn.Module):
         self.conv1 = nn.Conv2d(3, 64, kernel_size=7,
                                stride=2, padding=3, bias=False)
         self.bn1 = nn.BatchNorm2d(64)
-        self.relu = nn.ReLU(inplace=True)
+        self.relu1 = nn.ReLU()
 
         # pass 2 | bL-module
         self.conv2 = conv3x3(64, 64, stride=2)
         self.bn2 = nn.BatchNorm2d(64)
-        self.littleblock = ResBlock(
+        self.relu2 = nn.ReLU()
+        self.littleblock = ResBasicBlock(
             inplanes=64,
             planes=32, 
             stride=2, 
@@ -145,13 +146,13 @@ class bL_ResNet(nn.Module):
         # Conv
         base1 = self.conv1(x)
         base1 = self.bn1(base1)
-        base1 = self.relu(base1)
+        base1 = self.relu1(base1)
 
         # pass 2 | bL-module
         little1 = base1; big1 = base1;
         big1 = self.conv2(big1)
         big1 = self.bn2(big1)
-        big1 = self.relu(big1)
+        big1 = self.relu2(big1)
         little1 = self.littleblock(little1)
         assert (big1.shape == little1.shape)
         base2 = little1 + big1

@@ -16,6 +16,66 @@ def conv1x1(in_planes, out_planes, stride=1):
                      stride=stride, bias=False)
 
 
+class ResBasicBlock(nn.Module):
+    r'''A class for basic ResBlock, only used in the starting of the network.'''
+
+    def __init__(self, **kwargs):
+        super().__init__()
+        inplanes = kwargs['inplanes']
+        planes = kwargs['planes']
+        stride = kwargs['stride']
+        expansion = kwargs['expansion']
+
+        # Both self.conv2 and self.downsample layers downsample the input when stride != 1
+        self.conv1 = conv3x3(inplanes, planes)
+        self.bn1 = nn.BatchNorm2d(planes)
+        self.conv2 = conv3x3(planes, planes, stride)
+        self.bn2 = nn.BatchNorm2d(planes)
+        self.conv3 = conv1x1(planes, planes * expansion)
+        self.bn3 = nn.BatchNorm2d(planes * expansion)
+        self.relu = nn.ReLU(inplace=True)
+        self.expansion = expansion
+        self.inplanes = inplanes
+        self.planes = planes
+        self.stride = stride
+        self.downsample = self._find_downsampler()
+
+    def _find_downsampler(self):
+        '''used to downsample identity for adding to output'''
+        downsample = None
+        if self.stride != 1 or self.inplanes != self.planes * self.expansion:
+            downsample = nn.Sequential(
+                    conv1x1(
+                      self.inplanes,
+                      self.planes * self.expansion,
+                      self.stride),
+                    nn.BatchNorm2d(self.planes * self.expansion),
+                )
+        return downsample
+
+    def forward(self, x):
+
+        out = self.conv1(x)
+        out = self.bn1(out)
+        out = self.relu(out)
+
+        out = self.conv2(out)
+        out = self.bn2(out)
+        out = self.relu(out)
+
+        out = self.conv3(out)
+        out = self.bn3(out)
+
+        if self.downsample is not None:
+            identity = self.downsample(x)
+
+        assert(identity.shape == out.shape)
+        out += identity
+        out = self.relu(out)
+
+        return out
+
+
 class ResBlock(nn.Module):
     r'''The main class of Residual Blocks.
 
@@ -61,7 +121,6 @@ class ResBlock(nn.Module):
         return downsample
 
     def forward(self, x):
-        identity = x
 
         out = self.conv1(x)
         out = self.bn1(out)
