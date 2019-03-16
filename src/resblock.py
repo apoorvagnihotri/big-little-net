@@ -29,11 +29,13 @@ class ResBasicBlock(nn.Module):
         # Both self.conv2 and self.downsample layers downsample the input when stride != 1
         self.conv1 = conv3x3(inplanes, planes)
         self.bn1 = nn.BatchNorm2d(planes)
+        self.relu1 = nn.ReLU(inplace=True)
         self.conv2 = conv3x3(planes, planes, stride)
         self.bn2 = nn.BatchNorm2d(planes)
+        self.relu2 = nn.ReLU(inplace=True)
         self.conv3 = conv1x1(planes, planes * expansion)
         self.bn3 = nn.BatchNorm2d(planes * expansion)
-        self.relu = nn.ReLU(inplace=True)
+        self.relu3 = nn.ReLU(inplace=True)
         self.expansion = expansion
         self.inplanes = inplanes
         self.planes = planes
@@ -57,21 +59,20 @@ class ResBasicBlock(nn.Module):
 
         out = self.conv1(x)
         out = self.bn1(out)
-        out = self.relu(out)
+        out = self.relu1(out)
 
         out = self.conv2(out)
         out = self.bn2(out)
-        out = self.relu(out)
+        out = self.relu2(out)
 
         out = self.conv3(out)
         out = self.bn3(out)
 
         if self.downsample is not None:
-            identity = self.downsample(x)
+            x = self.downsample(x)
 
-        assert(identity.shape == out.shape)
-        out += identity
-        out = self.relu(out)
+        out += x
+        out = self.relu3(out)
 
         return out
 
@@ -96,11 +97,14 @@ class ResBlock(nn.Module):
         # Both self.conv2 and self.downsample layers downsample the input when stride != 1
         self.conv1 = conv1x1(inplanes, planes)
         self.bn1 = nn.BatchNorm2d(planes)
+        self.relu1 = nn.ReLU(inplace=True)
         self.conv2 = conv3x3(planes, planes, stride)
         self.bn2 = nn.BatchNorm2d(planes)
+        self.relu2 = nn.ReLU(inplace=True)
         self.conv3 = conv1x1(planes, planes * expansion)
         self.bn3 = nn.BatchNorm2d(planes * expansion)
-        self.relu = nn.ReLU(inplace=True)
+        self.relu3 = nn.ReLU(inplace=True)
+
         self.expansion = expansion
         self.inplanes = inplanes
         self.planes = planes
@@ -124,21 +128,20 @@ class ResBlock(nn.Module):
 
         out = self.conv1(x)
         out = self.bn1(out)
-        out = self.relu(out)
+        out = self.relu1(out)
 
         out = self.conv2(out)
         out = self.bn2(out)
-        out = self.relu(out)
+        out = self.relu2(out)
 
         out = self.conv3(out)
         out = self.bn3(out)
 
         if self.downsample is not None:
-            identity = self.downsample(x)
+            x = self.downsample(x)
 
-        assert(identity.shape == out.shape)
-        out += identity
-        out = self.relu(out)
+        out += x
+        out = self.relu3(out)
 
         return out
 

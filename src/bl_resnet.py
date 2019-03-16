@@ -31,12 +31,12 @@ class bL_ResNet(nn.Module):
         self.conv1 = nn.Conv2d(3, 64, kernel_size=7,
                                stride=2, padding=3, bias=False)
         self.bn1 = nn.BatchNorm2d(64)
-        self.relu1 = nn.ReLU()
+        self.relu1 = nn.ReLU(inplace=True)
 
         # pass 2 | bL-module
         self.conv2 = conv3x3(64, 64, stride=2)
         self.bn2 = nn.BatchNorm2d(64)
-        self.relu2 = nn.ReLU()
+        self.relu2 = nn.ReLU(inplace=True)
         self.littleblock = ResBasicBlock(
             inplanes=64,
             planes=32, 
@@ -55,13 +55,11 @@ class bL_ResNet(nn.Module):
 
         self.big_layer1 = self._make_layer(ResBlockB, arg_d)
         self.little_layer1 = self._make_layer(ResBlockL, arg_d)
-        arg_d['stride'] = 2
         self.transition1 = self._make_layer(TransitionLayer, arg_d)
 
         arg_d['planes'] = 128; arg_d['reps'] = layers[1];
         self.big_layer2 = self._make_layer(ResBlockB, arg_d)
         self.little_layer2 = self._make_layer(ResBlockL, arg_d)
-        arg_d['stride'] = 2
         self.transition2 = self._make_layer(TransitionLayer, arg_d)
 
         arg_d['planes'] = 256; arg_d['reps'] = layers[2];
@@ -86,13 +84,15 @@ class bL_ResNet(nn.Module):
                 nn.init.constant_(m.bias, 0)
 
 
-    def _make_layer(self, Block, arg_d):
+    def _make_layer(self, Block, arg_d_c):
         '''Instantiates a sequence of `Block`s.
 
         :attr:`Block` is the Big-Little Net `Block` we have chosen
-        :attr:`arg_d` are the arguments required to create objects for `Block`s
+        :attr:`arg_d_c` are the arguments required to create objects for `Block`s
         '''
         # according to the Block, setting some defaults.
+        arg_d = arg_d_c.copy() # making a local copy, avoiding mutability
+
         if Block == ResBlockB:
             inplanes = self.inplanesB
         elif Block == ResBlockL:
