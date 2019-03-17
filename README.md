@@ -18,7 +18,7 @@ This is an unofficial submission to ICLR 2019 Reproducibility Challenge. The cen
 - [x] Running baseline on slimmed data
 - [x] Integrating Big-Little Net Blocks
 - [x] Debug Issues
-- [ ] Check correctness
+- [x] Check correctness
 - [ ] Run the models on GPUs
 - [ ] Testing the reproducibility
 
@@ -42,12 +42,12 @@ _Setback_: The application approach needed the users to be informed of all the c
 
 **16th March 2019** - Corrected assersions, working to correct any error in architecture using [tensorboardX][3] for visualizing architecture. + worked on clearing some issues in architecture.
 
+**17th March 2019** - Resnet blocks when repeated don't have `stride = 2` at each block, need to remove that. ~~Also, the paper mentions that `ResBlockB` uses a `stride` of `2` in the first `Conv3x3`. I think again a similar thing is happening, we only need to apply the stride in the first block, this makes sense too, as the big branch has `1/2` the image resolution than the little branch, therefore, there is no point it upsampling and downsampling the image dims inside the Big Branch itself.~~ Every `ResBlockB` has a `stride = 3` for teh conv3x3 and every one of it ends with upsampling, read in the paper. 
+
 
 ## Plan
 
-**18th March 2019** - Resnet blocks when repeated don't have `stride = 2` at each block, need to remove that. Also, the paper mentions that `ResBlockB` uses a `stride` of `2` in the first `Conv3x3`. I think again a similar thing is happening, we only need to apply the stride in the first block, this makes sense too, as the big branch has `1/2` the image resolution than the little branch, therefore, there is no point it upsampling and downsampling the image dims inside the Big Branch itself.
-
-**20th March 2019** - Try running on Distributed Environment. Reproduce the results for `bL-ResNet50`.
+**19th March 2019** - Try running on Distributed Environment. Reproduce the results for `bL-ResNet50`.
 
 
 ## Requirements
@@ -89,6 +89,18 @@ Training is controlled by various options, which can be passed through the comma
 ```sh
 python3 train.py --help
 ```
+
+
+## Architecture Visualization
+
+To have a look at the architecture you can use the following command to generate tensorboard files (by default in `./run`) to view the architecture.
+```sh
+python3 viz.py
+tensorboard --port 8888 --logdir runs
+```
+
+visit **`localhost:8888`** to view the architecture. Look at `./arch.png` if you can't run tensorboad.
+
 
 ## Citations
 
