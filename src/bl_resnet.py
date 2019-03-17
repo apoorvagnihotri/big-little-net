@@ -118,6 +118,11 @@ class bL_ResNet(nn.Module):
         layers = []
         layers.append(Block(inplanes = inplanes, **arg_d))
         inplanes = self._new_inplanes(Block, planes, expansion, alpha)
+
+        # if we are dealing with a sequence of ResBlock
+        if Block == ResBlock:
+            arg_d['stride'] = 1 # after first Block, stride is set to 1
+        
         for _ in range(1, reps):
             layers.append(Block(inplanes = inplanes, **arg_d))
             inplanes = self._new_inplanes(Block, planes, expansion, alpha)
