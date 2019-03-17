@@ -24,7 +24,7 @@ This is an unofficial submission to ICLR 2019 Reproducibility Challenge. The cen
 
 ## Progress
 
-**5th March 2019** - Set-up repo, got ResNet baseline from [torchvision models](https://pytorch.org/docs/stable/torchvision/models.html). Figuring out details in Pytorch and covering some basics in it.
+**5th March 2019** - Set-up repo, got ResNet baseline from [torchvision models][1]. Figuring out details in Pytorch and covering some basics in it.
 
 **6th March 2019** - Pytorch Basics for CNNs | Understand ResNet code
 
@@ -36,11 +36,11 @@ This is an unofficial submission to ICLR 2019 Reproducibility Challenge. The cen
 
 _Setback_: The application approach needed the users to be informed of all the caveats of Big-Little Nets and its Network Architecture, threrfore beating the purpose of the generalized application for uninformed users.
 
-**12th March 2019** - Got runner code for ImageNet from [Pytorch Examples](https://github.com/pytorch/examples/tree/master/imagenet) and ran `resnet18` on a slimmed dataset.
+**12th March 2019** - Got runner code for ImageNet from [Pytorch Examples][2] and ran `resnet18` on a slimmed dataset.
 
 **14th March 2019** - Integrated Big-Little `Block`s. Running the code raises some assertions, need to check these.
 
-**16th March 2019** - Corrected assersions, working to correct any error in architecture using library for [visualizing](https://github.com/waleedka/hiddenlayer) architecture. + worked on clearing some issues in architecture.
+**16th March 2019** - Corrected assersions, working to correct any error in architecture using [tensorboardX][3] for visualizing architecture. + worked on clearing some issues in architecture.
 
 
 ## Plan
@@ -117,6 +117,10 @@ Please consider citing the original authors if you find the repository useful.
 
 Code snippets taken from the following locations were extremely useful to be able to reproduce the results.
 
-- [ResNet Model in PyTorch](https://github.com/pytorch/vision/blob/master/torchvision/models/resnet.py)
-- [ImageNet Runner Code](https://github.com/pytorch/examples/tree/master/imagenet)
-- [Visualizing Code](https://github.com/waleedka/hiddenlayer)
+- [ResNet Model in PyTorch][1]
+- [ImageNet Runner Code][2]
+- [tensorboardX][3]
+
+  [1]: https://pytorch.org/docs/stable/torchvision/models.html
+  [2]: https://github.com/pytorch/examples/tree/master/imagenet
+  [3]: https://github.com/lanpa/tensorboardX
