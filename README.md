@@ -40,14 +40,14 @@ _Setback_: The application approach needed the users to be informed of all the c
 
 **14th March 2019** - Integrated Big-Little `Block`s. Running the code raises some assertions, need to check these.
 
-**16th March 2019** - Corrected assersions, working to correct any error in architecture using library for [visualizing](https://github.com/waleedka/hiddenlayer) architecture.
+**16th March 2019** - Corrected assersions, working to correct any error in architecture using library for [visualizing](https://github.com/waleedka/hiddenlayer) architecture. + worked on clearing some issues in architecture.
 
 
 ## Plan
 
-**17th March 2019** - Try running on Distributed Environment.
+**18th March 2019** - Resnet blocks when repeated don't have `stride = 2` at each block, need to remove that. Also, the paper mentions that `ResBlockB` uses a `stride` of `2` in the first `Conv3x3`. I think again a similar thing is happening, we only need to apply the stride in the first block, this makes sense too, as the big branch has `1/2` the image resolution than the little branch, therefore, there is no point it upsampling and downsampling the image dims inside the Big Branch itself.
 
-**18th March 2019** - Reproduce the results for `bL-ResNet50`.
+**20th March 2019** - Try running on Distributed Environment. Reproduce the results for `bL-ResNet50`.
 
 
 ## Requirements
