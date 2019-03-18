@@ -44,10 +44,12 @@ _Setback_: The application approach needed the users to be informed of all the c
 
 **17th March 2019** - Resnet blocks when repeated don't have `stride = 2` at each block, need to remove that. ~~Also, the paper mentions that `ResBlockB` uses a `stride` of `2` in the first `Conv3x3`. I think again a similar thing is happening, we only need to apply the stride in the first block, this makes sense too, as the big branch has `1/2` the image resolution than the little branch, therefore, there is no point it upsampling and downsampling the image dims inside the Big Branch itself.~~ Every `ResBlockB` has a `stride = 3` for teh conv3x3 and every one of it ends with upsampling, read in the paper. 
 
+**18-19th March 2019** - Waiting for GPU access.
+
 
 ## Plan
 
-**19th March 2019** - Try running on Distributed Environment. Reproduce the results for `bL-ResNet50`.
+**21th March 2019** - Try running on Distributed Environment. Reproduce the results for `bL-ResNet50`.
 
 
 ## Requirements
