@@ -46,12 +46,12 @@ _Setback_: The application approach needed the users to be informed of all the c
 
 **18-21th March 2019** - Waiting for GPU access.
 
+**22th March 2019** - Correct the implementation by having upsampling at the end of the branches itself.
+
 
 ## Plan
 
-**22th March 2019** - Correct the implementation by having upsampling at the end of the branches itself.
-
-**xxth March 2019** - Try running on GPUs. Reproduce the results for `bL-ResNet50`.
+**24th March 2019** - Try running on GPUs. Reproduce the results for `bL-ResNet50`.
 
 
 ## Requirements
