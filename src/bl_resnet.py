@@ -50,7 +50,8 @@ class bL_ResNet(nn.Module):
             'alpha': alpha,
             'reps': layers[0],
             'stride': 2,
-            'expansion': 4
+            'expansion': 4,
+            'last': False
         }
 
         self.big_layer1 = self._make_layer(ResBlockB, arg_d)
@@ -115,17 +116,25 @@ class bL_ResNet(nn.Module):
         alpha = arg_d['alpha']
         beta = arg_d['beta']
 
+        # if last layer, we would do upsampling
+        i = 0
+        if i == reps - 1:
+            arg_d['last'] = True
+
         layers = []
         layers.append(Block(inplanes = inplanes, **arg_d))
-        inplanes = self._new_inplanes(Block, planes, expansion, alpha)
+        inplanes = self._new_inplanes(Block, **arg_d)
 
-        # if we are dealing with a sequence of ResBlock
-        if Block == ResBlock:
-            arg_d['stride'] = 1 # after first Block, stride is set to 1
+        # after first Block, stride is set to 1
+        if Block in [ResBlock, ResBlockB, ResBlockL]:
+            arg_d['stride'] = 1
         
-        for _ in range(1, reps):
+        for i in range(1, reps):
+            # if last layer
+            if i == reps - 1:
+                arg_d['last'] = True
             layers.append(Block(inplanes = inplanes, **arg_d))
-            inplanes = self._new_inplanes(Block, planes, expansion, alpha)
+            inplanes = self._new_inplanes(Block, **arg_d)
 
         # updating the current branch's inplanes
         if Block == ResBlockB:
@@ -139,10 +148,14 @@ class bL_ResNet(nn.Module):
 
         return nn.Sequential(*layers)
 
-    def _new_inplanes(self, Block, planes, expansion, alpha):
-        if Block in [ResBlockB, ResBlock, TransitionLayer]:
-            new_inplanes = planes * expansion
-        elif Block == ResBlockL:
+    def _new_inplanes(self, Block, **arg_d):
+        planes = arg_d['planes']
+        expansion = arg_d['expansion']
+        alpha = arg_d['alpha']
+        last = arg_d['last']
+        assert (Block in [ResBlockB, ResBlock, TransitionLayer, ResBlockL])
+        new_inplanes = int(planes * expansion)
+        if last and Block == ResBlockL:
             new_inplanes = int(planes * expansion * alpha)
         return new_inplanes
 

@@ -137,6 +137,7 @@ class ResBlockB(nn.Module):
         planes = kwargs['planes']
         stride = kwargs['stride']
         expansion = kwargs['expansion']
+        self.last = kwargs['last']
 
         # calling the immediate parent's init.
         self.rb = ResBlock(inplanes = inplanes, planes = planes,
@@ -145,8 +146,9 @@ class ResBlockB(nn.Module):
     def forward(self, x):
         out = self.rb(x)
 
-        # increasing image size
-        out = F.interpolate(out, scale_factor=2, mode='bilinear')
+        # increasing image size if last layer
+        if self.last:
+            out = F.interpolate(out, scale_factor=2, mode='bilinear')
 
         return out
 
@@ -165,6 +167,7 @@ class ResBlockL(nn.Module):
         alpha = kwargs['alpha']
         stride = kwargs['stride']
         expansion = kwargs['expansion']
+        self.last = kwargs['last']
 
         self.rb = ResBlock(inplanes = inplanes, planes = planes,
                       stride = stride, expansion = expansion)
@@ -176,10 +179,11 @@ class ResBlockL(nn.Module):
     def forward(self, x):
         out = self.rb(x)
 
-        # increasing layers
-        out = self.conv4(out)
-        out = self.bn4(out)
-        out = self.relu(out)
+        # increasing layers if last layer
+        if self.last:
+            out = self.conv4(out)
+            out = self.bn4(out)
+            out = self.relu(out)
 
         return out
 
