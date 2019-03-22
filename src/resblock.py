@@ -16,8 +16,9 @@ def conv1x1(in_planes, out_planes, stride=1):
                      stride=stride, bias=False)
 
 
-class ResBasicBlock(nn.Module):
-    r'''A class for basic ResBlock, only used in the starting of the network.'''
+class BasicBlock(nn.Module):
+    r"""A class for basic BasicBlock, only used in the starting of the network.
+    This block doesn't have shortcut"""
 
     def __init__(self, **kwargs):
         super().__init__()
@@ -40,20 +41,6 @@ class ResBasicBlock(nn.Module):
         self.inplanes = inplanes
         self.planes = planes
         self.stride = stride
-        self.downsample = self._find_downsampler()
-
-    def _find_downsampler(self):
-        '''used to downsample identity for adding to output'''
-        downsample = None
-        if self.stride != 1 or self.inplanes != self.planes * self.expansion:
-            downsample = nn.Sequential(
-                    conv1x1(
-                      self.inplanes,
-                      self.planes * self.expansion,
-                      self.stride),
-                    nn.BatchNorm2d(self.planes * self.expansion),
-                )
-        return downsample
 
     def forward(self, x):
 
@@ -67,11 +54,6 @@ class ResBasicBlock(nn.Module):
 
         out = self.conv3(out)
         out = self.bn3(out)
-
-        if self.downsample is not None:
-            x = self.downsample(x)
-
-        out += x
         out = self.relu3(out)
 
         return out

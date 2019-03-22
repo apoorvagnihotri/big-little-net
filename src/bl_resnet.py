@@ -37,7 +37,7 @@ class bL_ResNet(nn.Module):
         self.conv2 = conv3x3(64, 64, stride=2)
         self.bn2 = nn.BatchNorm2d(64)
         self.relu2 = nn.ReLU(inplace=True)
-        self.littleblock = ResBasicBlock(
+        self.littleblock = BasicBlock(
             inplanes=64,
             planes=32, 
             stride=2, 
