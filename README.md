@@ -48,10 +48,12 @@ _Setback_: The application approach needed the users to be informed of all the c
 
 **22th March 2019** - Correct the implementation by having upsampling at the end of the branches itself.
 
+**25th March 2019** - Running on 8 Nvidia-V100 16GB GPUs, taking `batch_size=1024` due to time and money contraint. Taking batch size as 1024 as it is the fastest I can go on 16GB cards.
+
 
 ## Plan
 
-**24th March 2019** - Try running on GPUs. Reproduce the results for `bL-ResNet50`.
+**28th March 2019** - Reproduce the results for `bL-ResNet50`.
 
 
 ## Requirements
@@ -128,6 +130,20 @@ Please consider citing the original authors if you find the repository useful.
   timestamp = {Mon, 13 Aug 2018 16:47:58 +0200},
   biburl    = {https://dblp.org/rec/bib/journals/corr/abs-1807-03848},
   bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+```
+
+Also, the citations for the ImageNet2012 dataset below,
+```
+@article{ILSVRC15,
+Author = {Olga Russakovsky and Jia Deng and Hao Su and Jonathan Krause and Sanjeev Satheesh and Sean Ma and Zhiheng Huang and Andrej Karpathy and Aditya Khosla and Michael Bernstein and Alexander C. Berg and Li Fei-Fei},
+Title = {{ImageNet Large Scale Visual Recognition Challenge}},
+Year = {2015},
+journal   = {International Journal of Computer Vision (IJCV)},
+doi = {10.1007/s11263-015-0816-y},
+volume={115},
+number={3},
+pages={211-252}
 }
 ```
 
