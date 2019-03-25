@@ -48,7 +48,7 @@ _Setback_: The application approach needed the users to be informed of all the c
 
 **22th March 2019** - Correct the implementation by having upsampling at the end of the branches itself.
 
-**25th March 2019** - Running on 8 Nvidia-V100 16GB GPUs, taking `batch_size=1024` due to time and money contraint. Taking batch size as 1024 as it is the fastest I can go on 16GB cards.
+**25th March 2019** - Running on 8 Nvidia-V100 16GB GPUs, taking `batch_size=1024` due to time and money contraint. Taking batch size as 1024 as it is the fastest I can go on 16GB cards (according to the idea that batch sizes should be multiple of 2s).
 
 
 ## Plan
