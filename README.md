@@ -54,6 +54,8 @@ Training ImageNet in 1 Hour][4].
 
 ## Plan
 
+**26th March 2019** - Noticed that the paper uses Cosine LR, need to update the code accordingly.
+
 **28th March 2019** - Reproduce the results for `bL-ResNet50`.
 
 
