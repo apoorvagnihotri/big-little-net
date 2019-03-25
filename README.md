@@ -48,7 +48,8 @@ _Setback_: The application approach needed the users to be informed of all the c
 
 **22th March 2019** - Correct the implementation by having upsampling at the end of the branches itself.
 
-**25th March 2019** - Running on 8 Nvidia-V100 16GB GPUs, taking `batch_size=1024` due to time and money contraint. Taking batch size as 1024 as it is the fastest I can go on 16GB cards (according to the idea that batch sizes should be multiple of 2s).
+**25th March 2019** - Running on 8 Nvidia-V100 16GB GPUs, taking `batch_size=1024` due to time and money contraint. Taking batch size as 1024 as it is the fastest I can go on 16GB cards (according to the idea that batch sizes should be multiple of 2s). Also using `lr=0.4` according to the results by the paper [Accurate, Large Minibatch SGD:
+Training ImageNet in 1 Hour][4].
 
 
 ## Plan
@@ -147,6 +148,32 @@ pages={211-252}
 }
 ```
 
+To train on large batch sizes (train faster) we need to change the learning rate as to maintain the accuracy of the network, therefore I am using `lr=4*old_lr=0.4` since the original batch size is 1/4th of the batch size I used. Citations for the relevant work below:
+
+```
+@article{DBLP:journals/corr/GoyalDGNWKTJH17,
+  author    = {Priya Goyal and
+               Piotr Doll{\'{a}}r and
+               Ross B. Girshick and
+               Pieter Noordhuis and
+               Lukasz Wesolowski and
+               Aapo Kyrola and
+               Andrew Tulloch and
+               Yangqing Jia and
+               Kaiming He},
+  title     = {Accurate, Large Minibatch {SGD:} Training ImageNet in 1 Hour},
+  journal   = {CoRR},
+  volume    = {abs/1706.02677},
+  year      = {2017},
+  url       = {http://arxiv.org/abs/1706.02677},
+  archivePrefix = {arXiv},
+  eprint    = {1706.02677},
+  timestamp = {Mon, 13 Aug 2018 16:49:10 +0200},
+  biburl    = {https://dblp.org/rec/bib/journals/corr/GoyalDGNWKTJH17},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+```
+
 Code snippets taken from the following locations were extremely useful to be able to reproduce the results.
 
 - [ResNet Model in PyTorch][1]
@@ -156,3 +183,4 @@ Code snippets taken from the following locations were extremely useful to be abl
   [1]: https://pytorch.org/docs/stable/torchvision/models.html
   [2]: https://github.com/pytorch/examples/tree/master/imagenet
   [3]: https://github.com/lanpa/tensorboardX
+  [4]: https://arxiv.org/pdf/1706.02677.pdf
