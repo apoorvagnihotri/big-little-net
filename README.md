@@ -136,20 +136,6 @@ Please consider citing the original authors if you find the repository useful.
 }
 ```
 
-Also, the citations for the ImageNet2012 dataset below,
-```
-@article{ILSVRC15,
-Author = {Olga Russakovsky and Jia Deng and Hao Su and Jonathan Krause and Sanjeev Satheesh and Sean Ma and Zhiheng Huang and Andrej Karpathy and Aditya Khosla and Michael Bernstein and Alexander C. Berg and Li Fei-Fei},
-Title = {{ImageNet Large Scale Visual Recognition Challenge}},
-Year = {2015},
-journal   = {International Journal of Computer Vision (IJCV)},
-doi = {10.1007/s11263-015-0816-y},
-volume={115},
-number={3},
-pages={211-252}
-}
-```
-
 To train on large batch sizes (train faster) we need to change the learning rate as to maintain the accuracy of the network, therefore I am using `lr=4*old_lr=0.4` since the original batch size is 1/4th of the batch size I used. Citations for the relevant work below:
 
 ```
