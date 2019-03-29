@@ -98,7 +98,7 @@ xxx
 
 ## Training
 
-[`train.py`][https://github.com/k0pch4/big-little-net/blob/master/train.py] below assumes that the ImageNet dataset path passed contains 2 folders, `train` and `val`. You could use the script [`valprep.sh`][6] to move the images from `val` in the corresponding labeled subfolders.
+[`train.py`](https://github.com/k0pch4/big-little-net/blob/master/train.py) below assumes that the ImageNet dataset path passed contains 2 folders, `train` and `val`. You could use the script [`valprep.sh`][6] to move the images from `val` in the corresponding labeled subfolders.
 
 Training is controlled by various options, which can be passed through the command line. The defaults can be looked at, in the file [``utils/options.py``](https://github.com/k0pch4/big-little-net/blob/master/helper/options.py). Defaults are set such that we would be required to set them unless we want to. Below is a sample run:
 ```sh
