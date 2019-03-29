@@ -171,10 +171,12 @@ class ResBlockL(nn.Module):
 
         self.rb = ResBlock(inplanes = inplanes, planes = planes,
                       stride = stride, expansion = expansion)
-        # for increasing the # of layers
-        self.conv4 = conv1x1(planes * expansion, planes * expansion * alpha)
-        self.bn4 = nn.BatchNorm2d(planes * expansion * alpha)
-        self.relu = nn.ReLU(inplace=True)
+
+        # We only define upsampling if block before merge
+        if self.last:
+            self.conv4 = conv1x1(planes * expansion, planes * expansion * alpha)
+            self.bn4 = nn.BatchNorm2d(planes * expansion * alpha)
+            self.relu = nn.ReLU(inplace=True)
 
     def forward(self, x):
         out = self.rb(x)
