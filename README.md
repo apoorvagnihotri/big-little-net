@@ -52,7 +52,7 @@ _Setback_: The application approach needed the users to be informed of all the c
 **25th March 2019** - Running on 8 Nvidia-V100 16GB GPUs, taking `batch_size=1024` due to time and money contraint. Taking batch size as 1024 as it is the fastest I can go on 16GB cards (according to the idea that batch sizes should be multiple of 2s). Also using `lr=0.4` according to the results by the paper [Accurate, Large Minibatch SGD:
 Training ImageNet in 1 Hour][4].
 
-**29th March 2019** - Added basic tests.
+**29th March 2019** - Added basic tests. Reduced memory usage by removing initilization of upsampling convs for `ResBlockL` other than the last block in blModule.
 
 
 ## Plan
@@ -172,8 +172,10 @@ Code snippets taken from the following locations were extremely useful to be abl
 - [ResNet Model in PyTorch][1]
 - [ImageNet Runner Code][2]
 - [tensorboardX][3]
+- [torchtest][5]
 
   [1]: https://pytorch.org/docs/stable/torchvision/models.html
   [2]: https://github.com/pytorch/examples/tree/master/imagenet
   [3]: https://github.com/lanpa/tensorboardX
   [4]: https://arxiv.org/pdf/1706.02677.pdf
+  [5]: https://github.com/suriyadeepan/torchtest
