@@ -98,9 +98,11 @@ xxx
 
 ## Training
 
-Training is controlled by various options, which can be passed through the command line. The defaults can be looked at, in the file [``utils/options.py``](https://github.com/k0pch4/big-little-net/blob/master/helper/options.py). Try running below, for the help menu:
+[`train.py`][https://github.com/k0pch4/big-little-net/blob/master/train.py] below assumes that the ImageNet dataset path passed contains 2 folders, `train` and `val`. You could use the script [`valprep.sh`][6] to move the images from `val` in the corresponding labeled subfolders.
+
+Training is controlled by various options, which can be passed through the command line. The defaults can be looked at, in the file [``utils/options.py``](https://github.com/k0pch4/big-little-net/blob/master/helper/options.py). Defaults are set such that we would be required to set them unless we want to. Below is a sample run:
 ```sh
-python3 train.py --help
+python3 train.py .imagenet/ --epochs 4 --lr 0.1 --alpha 2 --beta 4 --workers 4 -a bl_resnet50
 ```
 
 
@@ -178,3 +180,4 @@ Code snippets taken from the following locations were extremely useful to be abl
   [3]: https://github.com/lanpa/tensorboardX
   [4]: https://arxiv.org/pdf/1706.02677.pdf
   [5]: https://github.com/suriyadeepan/torchtest
+  [6]: https://raw.githubusercontent.com/soumith/imagenetloader.torch/master/valprep.sh
