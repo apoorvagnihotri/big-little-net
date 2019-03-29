@@ -20,6 +20,7 @@ This is an unofficial submission to ICLR 2019 Reproducibility Challenge. The cen
 - [x] Debug Issues
 - [x] Check correctness
 - [x] Added basic tests
+- [ ] Add Nesterov SDG with Cosine LR Scheduler to the runner code
 - [ ] Run the models on GPUs
 - [ ] Testing the reproducibility
 
@@ -57,9 +58,9 @@ Training ImageNet in 1 Hour][4].
 
 ## Plan
 
-**26th March 2019** - Noticed that the paper uses Cosine LR, need to update the code accordingly.
+**29th March 2019** - Adding cosine lr scheduler and nesterov momentum SDG to the runner code.
 
-**28th March 2019** - Reproduce the results for `bL-ResNet50`.
+**xx** - Run the model and try to reproduce the results for `bL-ResNet50`.
 
 
 ## Requirements
