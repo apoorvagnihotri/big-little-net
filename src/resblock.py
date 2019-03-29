@@ -64,9 +64,6 @@ class ResBlock(nn.Module):
 
     :attr:`inplanes` the number of activations in last layer
     :attr:`planes` the number of activations inside the block layers
-    :attr:`downsample` a `nn.Sequential` object, used to match the size
-    and layers of input image to perform point-wise addition to the
-    output of the block.
     '''
 
     def __init__(self, **kwargs):
@@ -76,7 +73,6 @@ class ResBlock(nn.Module):
         stride = kwargs['stride']
         expansion = kwargs['expansion']
 
-        # Both self.conv2 and self.downsample layers downsample the input when stride != 1
         self.conv1 = conv1x1(inplanes, planes)
         self.bn1 = nn.BatchNorm2d(planes)
         self.relu1 = nn.ReLU(inplace=True)
@@ -139,7 +135,6 @@ class ResBlockB(nn.Module):
         expansion = kwargs['expansion']
         self.last = kwargs['last']
 
-        # calling the immediate parent's init.
         self.rb = ResBlock(inplanes = inplanes, planes = planes,
                       stride = stride, expansion = expansion)
 
@@ -157,7 +152,7 @@ class ResBlockL(nn.Module):
     r'''ResBlock for the Little branch.
 
     :attr:`alpha` the scalar with wich we need to reduce the number of
-    layers in the ResBlock
+    layers in the convoltions in the Little Branch.
     '''
 
     def __init__(self, **kwargs):
@@ -191,7 +186,7 @@ class ResBlockL(nn.Module):
 
 
 class TransitionLayer(nn.Module):
-    r'''A Specialization of ResBlock with support for merging branches'''
+    r'''Block used to merge two branches'''
 
     def __init__(self, **kwargs):
         super().__init__()
