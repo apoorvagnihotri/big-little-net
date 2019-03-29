@@ -19,6 +19,7 @@ This is an unofficial submission to ICLR 2019 Reproducibility Challenge. The cen
 - [x] Integrating Big-Little Net Blocks
 - [x] Debug Issues
 - [x] Check correctness
+- [x] Added basic tests
 - [ ] Run the models on GPUs
 - [ ] Testing the reproducibility
 
@@ -50,6 +51,8 @@ _Setback_: The application approach needed the users to be informed of all the c
 
 **25th March 2019** - Running on 8 Nvidia-V100 16GB GPUs, taking `batch_size=1024` due to time and money contraint. Taking batch size as 1024 as it is the fastest I can go on 16GB cards (according to the idea that batch sizes should be multiple of 2s). Also using `lr=0.4` according to the results by the paper [Accurate, Large Minibatch SGD:
 Training ImageNet in 1 Hour][4].
+
+**29th March 2019** - Added basic tests.
 
 
 ## Plan
@@ -90,6 +93,8 @@ The Network architecture for bL-Resnet-50:
 
 
 ## Reproduced Results
+
+xxx
 
 
 ## Training
