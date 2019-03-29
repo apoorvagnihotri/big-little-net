@@ -19,8 +19,14 @@ def read_args(model_names):
                         help='mini-batch size (default: 256), this is the total '
                              'batch size of all GPUs on the current node when '
                              'using Data Parallel or Distributed Data Parallel')
+    parser.add_argument('--no-cosine-annealing', dest='cosine_ann',
+                        default=True, action='store_false',
+                        help="Don't use cosine annealing as the learning rate scheduler")
     parser.add_argument('--lr', '--learning-rate', default=0.1, type=float,
                         metavar='LR', help='initial learning rate', dest='lr')
+    parser.add_argument('--no-nesterov', dest='nesterov',
+                        default=True, action='store_false',
+                        help="Don't use Nesterov momentum optimizer")
     parser.add_argument('--momentum', default=0.9, type=float, metavar='M',
                         help='momentum')
     parser.add_argument('--wd', '--weight-decay', default=1e-4, type=float,
