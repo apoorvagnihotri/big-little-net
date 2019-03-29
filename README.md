@@ -20,7 +20,7 @@ This is an unofficial submission to ICLR 2019 Reproducibility Challenge. The cen
 - [x] Debug Issues
 - [x] Check correctness
 - [x] Added basic tests
-- [ ] Add Nesterov SDG with Cosine LR Scheduler to the runner code
+- [x] Add Nesterov SDG with Cosine LR Scheduler to the runner code
 - [ ] Run the models on GPUs
 - [ ] Testing the reproducibility
 
@@ -53,14 +53,12 @@ _Setback_: The application approach needed the users to be informed of all the c
 **25th March 2019** - Running on 8 Nvidia-V100 16GB GPUs, taking `batch_size=1024` due to time and money contraint. Taking batch size as 1024 as it is the fastest I can go on 16GB cards (according to the idea that batch sizes should be multiple of 2s). Also using `lr=0.4` according to the results by the paper [Accurate, Large Minibatch SGD:
 Training ImageNet in 1 Hour][4].
 
-**29th March 2019** - Added basic tests. Reduced memory usage by removing initilization of upsampling convs for `ResBlockL` other than the last block in blModule.
+**29th March 2019** - Added basic tests. Reduced memory usage by removing initilization of upsampling convs for `ResBlockL` other than the last block in blModule. Added Cosine Scheduler, also, the period of the cosine annealing is set to 1 by the authors, thus implicitly having no restarts.
 
 
 ## Plan
 
-**29th March 2019** - Adding cosine lr scheduler and nesterov momentum SDG to the runner code.
-
-**xx** - Run the model and try to reproduce the results for `bL-ResNet50`.
+**xx** - Run the model on a smaller dataset and try to see if any errors pertain further after that try to reproduce the results for `bL-ResNet50`.
 
 
 ## Requirements

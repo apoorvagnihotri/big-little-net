@@ -3,3 +3,4 @@ data/
 checkpoint.pth.tar
 runs/
 .vscode
+model_best.pth.tar

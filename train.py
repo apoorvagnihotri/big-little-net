@@ -129,7 +129,12 @@ def main_worker(gpu, ngpus_per_node, args):
 
     optimizer = torch.optim.SGD(model.parameters(), args.lr,
                                 momentum=args.momentum,
-                                weight_decay=args.weight_decay)
+                                weight_decay=args.weight_decay,
+                                nesterov=args.nesterov)
+
+    if args.cosine_ann:
+        # The period of the cosine annealer used is, 1; implicitly making no restarts
+        scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, args.epochs)
 
     # optionally resume from a checkpoint
     if args.resume:
@@ -143,6 +148,8 @@ def main_worker(gpu, ngpus_per_node, args):
                 best_acc1 = best_acc1.to(args.gpu)
             model.load_state_dict(checkpoint['state_dict'])
             optimizer.load_state_dict(checkpoint['optimizer'])
+            if args.cosine_ann:
+                scheduler.load_state_dict(checkpoint['scheduler'])
             print("=> loaded checkpoint '{}' (epoch {})"
                   .format(args.resume, checkpoint['epoch']))
         else:
@@ -191,7 +198,10 @@ def main_worker(gpu, ngpus_per_node, args):
     for epoch in range(args.start_epoch, args.epochs):
         if args.distributed:
             train_sampler.set_epoch(epoch)
-        adjust_learning_rate(optimizer, epoch, args)
+        
+        # update the lr if cosine annealing selected
+        if args.cosine_ann:
+            adjust_learning_rate(scheduler)
 
         # train for one epoch
         train(train_loader, model, criterion, optimizer, epoch, args)
@@ -205,13 +215,17 @@ def main_worker(gpu, ngpus_per_node, args):
 
         if not args.multiprocessing_distributed or (args.multiprocessing_distributed
                 and args.rank % ngpus_per_node == 0):
-            save_checkpoint({
+            states = {
                 'epoch': epoch + 1,
                 'arch': args.arch,
                 'state_dict': model.state_dict(),
                 'best_acc1': best_acc1,
-                'optimizer' : optimizer.state_dict(),
-            }, is_best)
+                'optimizer': optimizer.state_dict(),
+                }
+            if args.cosine_ann:
+                states['scheduler'] = scheduler.state_dict()
+            
+            save_checkpoint(states, is_best)
 
 
 def train(train_loader, model, criterion, optimizer, epoch, args):
@@ -332,11 +346,9 @@ class AverageMeter(object):
         self.avg = self.sum / self.count
 
 
-def adjust_learning_rate(optimizer, epoch, args):
-    """Sets the learning rate to the initial LR decayed by 10 every 30 epochs"""
-    lr = args.lr * (0.1 ** (epoch // 30))
-    for param_group in optimizer.param_groups:
-        param_group['lr'] = lr
+def adjust_learning_rate(scheduler):
+    """Sets the learning rate according to cosine annealer, else lr remains same"""
+    scheduler.step()
 
 
 def accuracy(output, target, topk=(1,)):
