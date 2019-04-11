@@ -1,3 +1,5 @@
+# Basic testing procedure taken from https://github.com/suriyadeepan/torchtest/blob/master/examples.py
+
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
