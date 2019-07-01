@@ -21,8 +21,9 @@ This is an unofficial submission to ICLR 2019 Reproducibility Challenge. The cen
 - [x] Check correctness
 - [x] Added basic tests
 - [x] Add Nesterov SDG with Cosine LR Scheduler to the runner code
-- [ ] Run the models on GPUs
-- [ ] Testing the reproducibility
+- [ ] ~~Run the models on GPUs~~
+- [ ] ~~Testing the reproducibility~~
+- [x] Repository archived
 
 ## Progress
 
@@ -58,7 +59,7 @@ Training ImageNet in 1 Hour][4].
 
 ## Plan
 
-**xx** - Run the model on a smaller dataset and try to see if any errors pertain further after that try to reproduce the results for `bL-ResNet50`.
+**xx** - ~~Run the model on a smaller dataset and try to see if any errors pertain further after that try to reproduce the results for `bL-ResNet50`.~~. Unfortunately, due to computational constraints, I am unable to move this work forward.
 
 
 ## Requirements
