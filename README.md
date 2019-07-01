@@ -4,6 +4,8 @@
 
 This is an unofficial submission to ICLR 2019 Reproducibility Challenge. The central theme of the work by the authors is to reduce the computations while improving the accuracy in the case of Object Recognition and Speech Recognition by using multiple branches with different scales in the CNN architecture. This helps in feature detection at different scales. The authors claim that in the case of Object Recognition they can improve the accuracy by 1% while reducing the computations by 1/3rd of the original.
 
+**Update**: For the official code for Big Little Net, checkout [IBM's](https://github.com/IBM/BigLittleNet) Official repository. This repository is being archived.
+
 
 ## Checklist
 
